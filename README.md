@@ -1,16 +1,75 @@
-# React + Vite
+# WebTransmetroGT
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Sistema web administrativo para el control basico del Transmetro GT.
 
-Currently, two official plugins are available:
+El proyecto fue desarrollado con React, Bootstrap y Supabase, siguiendo el alcance solicitado en el enunciado universitario: administrar lineas, estaciones, accesos, guardias, buses, parqueos, pilotos, operadores, recorridos, alertas y reportes.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Tecnologias
 
-## React Compiler
+- React + Vite
+- Bootstrap
+- Bootstrap Icons
+- React Router DOM
+- Supabase con PostgreSQL
+- Render para despliegue
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Funciones principales
 
-## Expanding the Oxlint configuration
+- Inicio de sesion por rol.
+- Panel de administrador.
+- Catalogos de municipalidades, lineas, estaciones, accesos, guardias, parqueos, buses, pilotos y operadores.
+- Definicion del orden de estaciones por linea.
+- Registro de distancia entre estaciones.
+- Registro de llegada y salida de buses por operador.
+- Generacion de alertas por sobrecupo o baja ocupacion.
+- Reportes de lineas, estaciones, buses asignados, recorridos y alertas.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+## Roles
+
+- Administrador: administra la informacion principal del sistema.
+- Operador: registra llegadas y salidas desde su estacion asignada.
+
+## Configuracion de Supabase
+
+1. Crear un proyecto en Supabase.
+2. Abrir el editor SQL.
+3. Pegar y ejecutar el archivo:
+
+```text
+base_datos/script_supabase.sql
+```
+
+4. Copiar las credenciales del proyecto y colocarlas en `.env`:
+
+```env
+VITE_SUPABASE_URL=https://su-proyecto.supabase.co
+VITE_SUPABASE_ANON_KEY=su-clave-anon-publica
+```
+
+## Usuario inicial
+
+El script crea un administrador inicial:
+
+```text
+Correo: admin@gmail.com
+Contrasena: Admin123*
+```
+
+## Ejecutar localmente
+
+```bash
+npm install
+npm run dev
+```
+
+## Construir para produccion
+
+```bash
+npm run build
+```
+
+## Documentacion incluida
+
+- `base_datos/script_supabase.sql`: estructura completa de base de datos.
+- `base_datos/consultas_reportes.sql`: consultas SQL para reportes.
+- `documentacion/guia_configuracion.md`: pasos para configurar Supabase.
