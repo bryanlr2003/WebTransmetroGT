@@ -1,11 +1,11 @@
-// Mantiene los saltos de linea en mensajes largos, por ejemplo en alertas.
+// Mantiene los saltos de línea en mensajes largos, por ejemplo en alertas.
 function obtenerEstiloCelda(contenido) {
   return typeof contenido === 'string' && contenido.includes('\n')
     ? { whiteSpace: 'pre-line' }
     : undefined
 }
 
-// Tabla reutilizable basada en Bootstrap para mostrar catalogos y reportes.
+// Tabla reutilizable basada en Bootstrap para mostrar catálogos y reportes.
 // columnas define los encabezados, datos contiene los registros y acciones es opcional.
 export function TablaDatos({ columnas, datos, acciones }) {
   return (
@@ -13,7 +13,7 @@ export function TablaDatos({ columnas, datos, acciones }) {
       <table className="table table-hover tabla-ajustada mb-0">
         <thead className="table-light">
           <tr>
-            {/* Se crean los encabezados segun las columnas recibidas. */}
+            {/* Se crean los encabezados según las columnas recibidas. */}
             {columnas.map((columna) => (
               <th key={columna.campo}>{columna.titulo}</th>
             ))}
@@ -42,7 +42,7 @@ export function TablaDatos({ columnas, datos, acciones }) {
                   </td>
                 )
               })}
-              {/* La ultima columna se muestra solo en catalogos con editar o eliminar. */}
+              {/* La última columna se muestra solo en catálogos con editar o eliminar. */}
               {acciones && <td className="text-end">{acciones(registro)}</td>}
             </tr>
           ))}

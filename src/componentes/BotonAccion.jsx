@@ -1,4 +1,4 @@
-// Boton reutilizable que muestra el proceso y evita volver a enviar la misma accion.
+// Botón reutilizable que muestra el proceso y evita volver a enviar la misma acción.
 // Recibe el texto normal, el texto durante el proceso y clases para reutilizarlo en varios formularios.
 export function BotonAccion({
   type = 'button',
@@ -20,13 +20,13 @@ export function BotonAccion({
       aria-busy={procesando}
     >
       {procesando ? (
-        // Durante el envio muestra un indicador visual y el texto de espera.
+        // Durante el envío muestra un indicador visual y el texto de espera.
         <>
           <span className="spinner-border spinner-border-sm me-1" aria-hidden="true"></span>
           {textoProcesando}
         </>
       ) : (
-        // Cuando no hay proceso, muestra el icono y texto normal del boton.
+        // Cuando no hay proceso, muestra el ícono y texto normal del botón.
         <>
           {icono && <i className={`bi ${icono} me-1`}></i>}
           {texto}

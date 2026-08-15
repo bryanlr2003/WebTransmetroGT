@@ -1,6 +1,6 @@
 // Hooks de React para guardar valores y cargarlos al abrir el formulario.
 import { useEffect, useState } from 'react'
-// Boton y hook comunes para evitar que el mismo formulario se guarde dos veces.
+// Botón y hook comunes para evitar que el mismo formulario se guarde dos veces.
 import { useAccionUnica } from '../ganchos/useAccionUnica.js'
 import { BotonAccion } from './BotonAccion.jsx'
 
@@ -24,18 +24,18 @@ function obtenerOpcionesCampo(campo, valores) {
   return campo.opciones || []
 }
 
-// Mantiene el telefono con ocho digitos y agrega el guion despues del cuarto.
+// Mantiene el teléfono con ocho dígitos y agrega el guion después del cuarto.
 function formatearTelefono(valor) {
   const digitos = String(valor).replace(/\D/g, '').slice(0, 8)
   return digitos.length > 4 ? `${digitos.slice(0, 4)}-${digitos.slice(4)}` : digitos
 }
 
-// El DPI se guarda solo con sus trece digitos, sin letras ni simbolos.
+// El DPI se guarda solo con sus trece dígitos, sin letras ni símbolos.
 function formatearDpi(valor) {
   return String(valor).replace(/\D/g, '').slice(0, 13)
 }
 
-// Ordena la placa con una letra inicial, tres numeros y tres letras.
+// Ordena la placa con una letra inicial, tres números y tres letras.
 function formatearPlaca(valor) {
   const texto = String(valor).toUpperCase().replace(/[^A-Z0-9]/g, '')
   // La primera letra indica el tipo de placa, por ejemplo U o C.
@@ -48,7 +48,7 @@ function formatearPlaca(valor) {
   return [prefijo, numeros, letras].filter(Boolean).join(' ')
 }
 
-// Aplica el formato indicado en la configuracion de cada campo.
+// Aplica el formato indicado en la configuración de cada campo.
 function aplicarFormato(campo, valor) {
   if (campo.formato === 'telefono') return formatearTelefono(valor)
   if (campo.formato === 'dpi') return formatearDpi(valor)
@@ -57,7 +57,7 @@ function aplicarFormato(campo, valor) {
 }
 
 // Formulario reutilizable para crear o editar registros desde una ventana modal.
-// Recibe la visibilidad, titulo, campos, registro, textos y funciones de guardar o cerrar.
+// Recibe la visibilidad, título, campos, registro, textos y funciones de guardar o cerrar.
 export function FormularioModal({
   visible,
   titulo,
@@ -69,7 +69,7 @@ export function FormularioModal({
 }) {
   // valores guarda temporalmente lo escrito o seleccionado en cada campo.
   const [valores, setValores] = useState({})
-  // procesando bloquea Guardar, Cancelar y Cerrar hasta terminar la operacion.
+  // procesando bloquea Guardar, Cancelar y Cerrar hasta terminar la operación.
   const { procesando, ejecutar } = useAccionUnica()
 
   // Cada vez que se abre el modal se cargan los datos iniciales.
@@ -101,7 +101,7 @@ export function FormularioModal({
     })
   }
 
-  // Envia los datos una sola vez, aunque se presione Guardar rapidamente varias veces.
+  // Envía los datos una sola vez, aunque se presione Guardar rápidamente varias veces.
   async function enviarFormulario(evento) {
     evento.preventDefault()
     await ejecutar(() => onGuardar(valores))
@@ -114,7 +114,7 @@ export function FormularioModal({
         <form className="modal-content" onSubmit={enviarFormulario}>
           <div className="modal-header">
             <h5 className="modal-title">{titulo}</h5>
-            {/* No permite cerrar el modal mientras se guarda para no interrumpir el envio. */}
+            {/* No permite cerrar el modal mientras se guarda para no interrumpir el envío. */}
             <button
               type="button"
               className="btn-close"
@@ -125,7 +125,7 @@ export function FormularioModal({
           </div>
           <div className="modal-body">
             <div className="row g-3">
-              {/* Los campos se construyen con la configuracion enviada por cada pantalla. */}
+              {/* Los campos se construyen con la configuración enviada por cada pantalla. */}
               {campos.map((campo) => (
                 <div className={campo.columna || 'col-md-6'} key={campo.nombre}>
                   <label className={`form-label ${campo.requerido ? 'campo-obligatorio' : ''}`}>
@@ -188,7 +188,7 @@ export function FormularioModal({
           </div>
           {/* Botones para cancelar o enviar los datos capturados. */}
           <div className="modal-footer">
-            {/* Cancelar tambien queda bloqueado hasta que el guardado termine. */}
+            {/* Cancelar también queda bloqueado hasta que el guardado termine. */}
             <button type="button" className="btn btn-outline-secondary" onClick={onCerrar} disabled={procesando}>
               Cancelar
             </button>
