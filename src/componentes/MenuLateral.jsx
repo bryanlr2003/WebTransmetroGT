@@ -1,13 +1,16 @@
+// NavLink crea enlaces y marca automáticamente la ruta que está activa.
 import { NavLink } from 'react-router-dom'
+// Hook usado para saber el rol del usuario que inició sesión.
 import { useAutenticacion } from '../ganchos/useAutenticacion.js'
 
-// Menu definido por rol para que cada usuario vea solo sus funciones.
+// Menú definido por rol para que cada usuario vea solo sus funciones.
+// Cada opción guarda la ruta, ícono de Bootstrap y texto que se muestra en pantalla.
 const menusPorRol = {
   administrador: [
     { ruta: '/admin', icono: 'bi-speedometer2', texto: 'Dashboard', exacto: true },
     { ruta: '/admin/municipalidades', icono: 'bi-building', texto: 'Municipalidades' },
     { ruta: '/admin/estaciones', icono: 'bi-geo-alt', texto: 'Estaciones' },
-    { ruta: '/admin/lineas', icono: 'bi-signpost-2', texto: 'Lineas' },
+    { ruta: '/admin/lineas', icono: 'bi-signpost-2', texto: 'Líneas' },
     { ruta: '/admin/rutas', icono: 'bi-diagram-3', texto: 'Orden de ruta' },
     { ruta: '/admin/accesos', icono: 'bi-door-open', texto: 'Accesos' },
     { ruta: '/admin/guardias', icono: 'bi-shield-check', texto: 'Guardias' },
@@ -18,7 +21,7 @@ const menusPorRol = {
     { ruta: '/admin/reportes', icono: 'bi-bar-chart', texto: 'Reportes' },
   ],
   operador: [
-    { ruta: '/operador', icono: 'bi-speedometer2', texto: 'Mi estacion', exacto: true },
+    { ruta: '/operador', icono: 'bi-speedometer2', texto: 'Mi estación', exacto: true },
     { ruta: '/operador/llegadas', icono: 'bi-box-arrow-in-down', texto: 'Registrar llegada' },
     { ruta: '/operador/salidas', icono: 'bi-box-arrow-up', texto: 'Registrar salida' },
     { ruta: '/operador/alertas', icono: 'bi-exclamation-triangle', texto: 'Alertas' },
@@ -27,7 +30,7 @@ const menusPorRol = {
 
 export function MenuLateral() {
   const { usuarioActual } = useAutenticacion()
-  // Segun el rol guardado en sesion se cargan las opciones del menu.
+  // Según el rol guardado en sesión se cargan las opciones del menú.
   const opciones = menusPorRol[usuarioActual?.rol] || []
 
   return (
@@ -42,6 +45,7 @@ export function MenuLateral() {
         </div>
       </div>
 
+      {/* Se recorren las opciones del rol para generar los enlaces del menú. */}
       <nav className="nav flex-column menu-lateral">
         {opciones.map((opcion) => (
           <NavLink

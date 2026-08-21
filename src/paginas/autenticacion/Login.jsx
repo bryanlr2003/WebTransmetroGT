@@ -1,41 +1,56 @@
+// Pantalla inicial: solicita credenciales y dirige al usuario según su rol.
+
+// Importaciones de React para guardar los datos escritos en el formulario.
 import { useState } from 'react'
+// Importaciones para navegar y evitar que un usuario con sesión vea el login otra vez.
 import { Navigate, useNavigate } from 'react-router-dom'
+// Hooks propios para usar la sesión y comprobar la conexión con los datos.
 import { useAutenticacion } from '../../ganchos/useAutenticacion.js'
 import { useDatos } from '../../ganchos/useDatos.js'
+// Componente para mostrar mensajes, botón que evita envíos repetidos y función para la ruta de cada rol.
 import { MensajeEstado } from '../../componentes/MensajeEstado.jsx'
+import { BotonAccion } from '../../componentes/BotonAccion.jsx'
+import { useAccionUnica } from '../../ganchos/useAccionUnica.js'
 import { obtenerRutaPorRol } from '../../utilidades/rutasRoles.js'
 
 export function Login() {
+  // Navegación, sesión actual y aviso de carga que vienen de los hooks del sistema.
   const navegar = useNavigate()
   const { iniciarSesion, cargandoSesion, usuarioActual } = useAutenticacion()
   const { supabaseConfigurado } = useDatos()
 
-  // Estados controlados para capturar las credenciales del formulario.
+  // Estados controlados para capturar las credenciales y mostrar un posible error.
   const [correo, setCorreo] = useState('')
   const [contrasena, setContrasena] = useState('')
   const [error, setError] = useState('')
 
-  // Envia correo y contrasena al proveedor de autenticacion.
+  // Bloquea el botón de inicio mientras se valida la sesión para evitar varios envíos.
+  const { procesando, ejecutar } = useAccionUnica()
+
+  // Envía correo y contraseña una vez, aunque se haga clic rápido sobre el botón.
   async function enviarFormulario(evento) {
     evento.preventDefault()
-    setError('')
 
-    try {
-      const usuario = await iniciarSesion(correo, contrasena)
-      const rutaInicio = obtenerRutaPorRol(usuario.rol)
+    await ejecutar(async () => {
+      setError('')
 
-      // Si el rol no esta permitido, no se deja entrar al sistema.
-      if (!rutaInicio) {
-        throw new Error('El usuario tiene un rol no permitido en el sistema.')
+      try {
+        const usuario = await iniciarSesion(correo, contrasena)
+        const rutaInicio = obtenerRutaPorRol(usuario.rol)
+
+        // Si el rol no está permitido, no se deja entrar al sistema.
+        if (!rutaInicio) {
+          throw new Error('El usuario tiene un rol no permitido en el sistema.')
+        }
+
+        navegar(rutaInicio, { replace: true })
+      } catch (err) {
+        setError(err.message)
       }
-
-      navegar(rutaInicio, { replace: true })
-    } catch (err) {
-      setError(err.message)
-    }
+    })
   }
 
-  // Si ya hay sesion activa, evita mostrar el login de nuevo.
+  // Si ya hay sesión activa, evita mostrar el login de nuevo.
   if (usuarioActual) {
     const rutaInicio = obtenerRutaPorRol(usuarioActual.rol)
 
@@ -44,35 +59,23 @@ export function Login() {
     }
   }
 
+  // Estructura visual dividida entre la identidad de la plataforma y el formulario.
   return (
     <main className="pantalla-login">
       <section className="tarjeta-login">
         <div className="row g-0">
-          <div className="col-lg-5 bg-success text-white p-4 p-lg-5 d-flex flex-column justify-content-between">
+          <div className="col-lg-5 bg-success text-white p-4 p-lg-5 d-flex align-items-center justify-content-center text-center">
             <div>
-              <div className="d-flex align-items-center gap-2 mb-4">
-                <span className="bg-white text-success rounded-2 d-inline-flex align-items-center justify-content-center" style={{ width: 42, height: 42 }}>
-                  <i className="bi bi-bus-front-fill fs-4"></i>
-                </span>
-                <div>
-                  <h1 className="h4 mb-0">Transmetro GT</h1>
-                  <small>Control administrativo</small>
-                </div>
-              </div>
-              <p className="lead mb-0">
-                Sistema web para administrar lineas, estaciones, buses, recorridos y alertas de capacidad.
-              </p>
+              <span className="bg-white text-success rounded-2 d-inline-flex align-items-center justify-content-center" style={{ width: 52, height: 52 }}>
+                <i className="bi bi-bus-front-fill fs-3"></i>
+              </span>
+              <h1 className="h3 mt-3 mb-1">Transmetro GT</h1>
+              <p className="mb-0">Plataforma web</p>
             </div>
-            <small className="opacity-75 mt-4">
-              Proyecto privado del area de analisis, diseno y desarrollo de sistemas.
-            </small>
           </div>
 
           <div className="col-lg-7 p-4 p-lg-5">
-            <h2 className="h3 fw-bold mb-2">Iniciar sesion</h2>
-            <p className="texto-suave mb-4">
-              Ingrese las credenciales registradas en Supabase.
-            </p>
+            <h2 className="h3 fw-bold mb-2">Iniciar sesión</h2>
 
             {!supabaseConfigurado && (
               <MensajeEstado tipo="warning">
@@ -82,6 +85,7 @@ export function Login() {
 
             <MensajeEstado tipo="danger">{error}</MensajeEstado>
 
+            {/* Los campos requeridos evitan enviar el formulario vacio desde el navegador. */}
             <form onSubmit={enviarFormulario}>
               <div className="mb-3">
                 <label className="form-label">Correo</label>
@@ -94,7 +98,7 @@ export function Login() {
                 />
               </div>
               <div className="mb-4">
-                <label className="form-label">Contrasena</label>
+                <label className="form-label">Contraseña</label>
                 <input
                   type="password"
                   className="form-control"
@@ -103,9 +107,15 @@ export function Login() {
                   required
                 />
               </div>
-              <button className="btn btn-primario w-100" type="submit" disabled={cargandoSesion}>
-                {cargandoSesion ? 'Validando...' : 'Entrar al sistema'}
-              </button>
+              {/* El botón queda bloqueado hasta terminar la validación de las credenciales. */}
+              <BotonAccion
+                type="submit"
+                className="btn btn-primario w-100"
+                icono="bi-box-arrow-in-right"
+                texto="Entrar al sistema"
+                textoProcesando="Validando..."
+                procesando={procesando || cargandoSesion}
+              />
             </form>
           </div>
         </div>

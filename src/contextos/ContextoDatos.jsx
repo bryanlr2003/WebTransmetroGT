@@ -1,14 +1,18 @@
+// Proveedor que concentra los datos de la base y las operaciones usadas por las pantallas.
+// Importación de hooks para guardar estado, cargar datos y reutilizar funciones.
 import { useCallback, useEffect, useState } from 'react'
+// Importación del servicio que se comunica con Supabase.
 import { servicioDatos } from '../servicios/servicioDatos.js'
+// Importación del contexto donde se compartirán los datos.
 import { ContextoDatos } from './contextosBase.js'
 
 export function ProveedorDatos({ children }) {
-  // Estado general con la informacion consultada desde la base de datos.
+  // Estado general con la información consultada desde la base de datos y mensajes de carga o error.
   const [datos, setDatos] = useState({})
   const [cargandoDatos, setCargandoDatos] = useState(true)
   const [errorDatos, setErrorDatos] = useState('')
 
-  // Trae nuevamente todos los catalogos y registros usados por la aplicacion.
+  // Trae nuevamente todos los catálogos y registros usados por la aplicación.
   const recargarDatos = useCallback(async () => {
     setCargandoDatos(true)
     setErrorDatos('')
@@ -22,12 +26,12 @@ export function ProveedorDatos({ children }) {
     }
   }, [])
 
-  // Primera carga de datos al iniciar la aplicacion.
+  // Primera carga de datos al iniciar la aplicación. Si falla, errorDatos queda disponible para mostrarlo.
   useEffect(() => {
     recargarDatos()
   }, [recargarDatos])
 
-  // Funciones reutilizadas por los catalogos del administrador.
+  // Funciones reutilizadas por los catálogos del administrador. Después de cada cambio se recargan los datos.
   async function crearRegistro(tabla, valores) {
     await servicioDatos.crearRegistro(tabla, valores)
     await recargarDatos()
@@ -43,7 +47,7 @@ export function ProveedorDatos({ children }) {
     await recargarDatos()
   }
 
-  // Los usuarios se crean con procedimientos SQL para guardar la contrasena de forma protegida.
+  // Los usuarios se crean con procedimientos SQL para guardar la contraseña de forma protegida.
   async function crearUsuario(valores) {
     await servicioDatos.crearUsuario(valores)
     await recargarDatos()
@@ -54,19 +58,20 @@ export function ProveedorDatos({ children }) {
     await recargarDatos()
   }
 
-  // Registra la llegada de un bus y devuelve el resultado de capacidad.
+  // Registra la llegada de un bus, actualiza las listas y devuelve el resultado de capacidad.
   async function registrarRecorrido(valores) {
     const resultado = await servicioDatos.registrarRecorrido(valores)
     await recargarDatos()
     return resultado
   }
 
-  // Cierra un recorrido pendiente cuando el bus sale de la estacion.
+  // Cierra un recorrido pendiente cuando el bus sale de la estación y actualiza las listas.
   async function registrarSalidaRecorrido(recorridoId, horaSalida, observacionSalida) {
     await servicioDatos.registrarSalidaRecorrido(recorridoId, horaSalida, observacionSalida)
     await recargarDatos()
   }
 
+  // Objeto que se comparte con todos los componentes que necesitan datos del sistema.
   const valor = {
     datos,
     cargandoDatos,
@@ -82,5 +87,6 @@ export function ProveedorDatos({ children }) {
     registrarSalidaRecorrido,
   }
 
+  // Entrega los datos y funciones a los componentes que están dentro del proveedor.
   return <ContextoDatos.Provider value={valor}>{children}</ContextoDatos.Provider>
 }

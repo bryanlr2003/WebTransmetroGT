@@ -1,6 +1,8 @@
+// Este servicio agrupa las consultas y procedimientos que conectan la web con Supabase.
+// Importación del cliente configurado y del indicador de conexión disponible.
 import { clienteSupabase, supabaseConfigurado } from './clienteSupabase.js'
 
-// Campos consultados por tabla. En usuarios se evita traer el hash de contrasena.
+// Campos que se consultan por tabla. En usuarios se evita traer el hash de contraseña por seguridad.
 const consultasPorTabla = {
   usuarios: 'id,nombre,correo,rol,estacion_id,estado,creado_en,actualizado_en',
   municipalidades: '*',
@@ -16,26 +18,28 @@ const consultasPorTabla = {
   alertas: '*',
 }
 
+// Lista generada desde la configuración anterior para cargar todos los catálogos al abrir la aplicación.
 const nombresTablas = Object.keys(consultasPorTabla)
 
-// Antes de consultar se valida que el archivo .env tenga las credenciales.
+// Control de conexión: antes de consultar se valida que el archivo .env tenga las credenciales.
 function validarConexionSupabase() {
   if (!supabaseConfigurado) {
     throw new Error('Faltan las credenciales de Supabase en el archivo .env.')
   }
 }
 
-// Funcion auxiliar para manejar de la misma forma los errores de Supabase.
+// Función auxiliar que devuelve los datos o convierte el error de Supabase en un mensaje manejable.
 async function ejecutarConsulta(consulta) {
   const { data, error } = await consulta
   if (error) throw new Error(error.message)
   return data
 }
 
+// Objeto público con las operaciones que pueden usar los contextos y las pantallas.
 export const servicioDatos = {
   supabaseConfigurado,
 
-  // Traer los reportes y catalogos principales de la base de datos.
+  // Trae los catálogos y registros principales. Se ordenan por id para mostrarlos de forma consistente.
   async obtenerTodosLosDatos() {
     validarConexionSupabase()
 
@@ -51,7 +55,7 @@ export const servicioDatos = {
     return resultado
   },
 
-  // Llama al procedimiento SQL que valida correo, contrasena y estado del usuario.
+  // Llama al procedimiento SQL con parámetros separados para validar correo, contraseña y estado del usuario.
   async iniciarSesion(correo, contrasena) {
     validarConexionSupabase()
 
@@ -69,7 +73,7 @@ export const servicioDatos = {
     return respuesta[0]
   },
 
-  // Inserta registros de catalogos simples.
+  // Inserta un registro en el catálogo indicado y devuelve el registro creado.
   async crearRegistro(tabla, datosRegistro) {
     validarConexionSupabase()
 
@@ -78,7 +82,7 @@ export const servicioDatos = {
     )
   },
 
-  // Actualiza registros de catalogos simples.
+  // Actualiza un registro usando su id para que solo se modifique el elemento seleccionado.
   async actualizarRegistro(tabla, id, datosRegistro) {
     validarConexionSupabase()
 
@@ -87,7 +91,7 @@ export const servicioDatos = {
     )
   },
 
-  // Elimina registros desde el catalogo indicado.
+  // Elimina un registro del catálogo indicado usando su id y confirma la operación con true.
   async eliminarRegistro(tabla, id) {
     validarConexionSupabase()
 
@@ -95,7 +99,7 @@ export const servicioDatos = {
     return true
   },
 
-  // Crea usuarios usando un procedimiento SQL para guardar la contrasena de forma protegida.
+  // Crea usuarios usando un procedimiento SQL para guardar la contraseña de forma protegida.
   async crearUsuario(datosUsuario) {
     validarConexionSupabase()
 
@@ -112,7 +116,7 @@ export const servicioDatos = {
     return respuesta?.[0] || respuesta
   },
 
-  // Actualiza datos del usuario y solo cambia la contrasena si se envia una nueva.
+  // Actualiza datos del usuario y solo cambia la contraseña si se envía una nueva.
   async actualizarUsuario(id, datosUsuario) {
     validarConexionSupabase()
 
@@ -131,7 +135,7 @@ export const servicioDatos = {
     return respuesta?.[0] || respuesta
   },
 
-  // Registra llegada, pasajeros y genera alerta si aplica segun la capacidad.
+  // Registra llegada, pasajeros y genera alerta si aplica según la capacidad del bus.
   async registrarRecorrido(datosRecorrido) {
     validarConexionSupabase()
 
@@ -150,7 +154,7 @@ export const servicioDatos = {
     return respuesta?.[0] || respuesta
   },
 
-  // Marca el recorrido como finalizado cuando el bus sale de la estacion.
+  // Marca el recorrido como finalizado cuando el bus sale de la estación y guarda su observación.
   async registrarSalidaRecorrido(recorridoId, horaSalida, observacionSalida) {
     validarConexionSupabase()
 
