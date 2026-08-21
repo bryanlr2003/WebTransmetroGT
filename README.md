@@ -1,10 +1,10 @@
 # WebTransmetroGT
 
-Sistema web administrativo para el control basico del Transmetro GT.
+Sistema web administrativo para el control básico del Transmetro GT.
 
-El proyecto fue desarrollado con React, Bootstrap y Supabase, siguiendo el alcance solicitado en el enunciado universitario: administrar lineas, estaciones, accesos, guardias, buses, parqueos, pilotos, operadores, recorridos, alertas y reportes.
+El proyecto fue desarrollado con React, Bootstrap y Supabase, siguiendo el alcance solicitado por la Docente Evaluadora: administrar líneas, estaciones, accesos, guardias, buses, parqueos, pilotos, operadores, recorridos, alertas y reportes.
 
-## Tecnologias
+## Tecnologías
 
 - React + Vite
 - Bootstrap
@@ -15,21 +15,21 @@ El proyecto fue desarrollado con React, Bootstrap y Supabase, siguiendo el alcan
 
 ## Funciones principales
 
-- Inicio de sesion por rol.
+- Inicio de sesión por rol.
 - Panel de administrador.
-- Catalogos de municipalidades, lineas, estaciones, accesos, guardias, parqueos, buses, pilotos y operadores.
-- Definicion del orden de estaciones por linea.
+- Catálogos de municipalidades, líneas, estaciones, accesos, guardias, parqueos, buses, pilotos y operadores.
+- Definición del orden de estaciones por línea.
 - Registro de distancia entre estaciones.
 - Registro de llegada y salida de buses por operador.
-- Generacion de alertas por sobrecupo o baja ocupacion.
-- Reportes de lineas, estaciones, buses asignados, recorridos y alertas.
+- Generación de alertas por sobrecupo o baja ocupación.
+- Reportes de líneas, estaciones, buses asignados, recorridos y alertas.
 
 ## Roles
 
-- Administrador: administra la informacion principal del sistema.
-- Operador: registra llegadas y salidas desde su estacion asignada.
+- Administrador: administra la información principal del sistema.
+- Operador: registra llegadas y salidas desde su estación asignada.
 
-## Configuracion de Supabase
+## Configuración de Supabase
 
 1. Crear un proyecto en Supabase.
 2. Abrir el editor SQL.
@@ -52,7 +52,7 @@ El script crea un administrador inicial:
 
 ```text
 Correo: admin@gmail.com
-Contrasena: Admin123*
+Contraseña: Admin123*
 ```
 
 ## Ejecutar localmente
@@ -62,14 +62,8 @@ npm install
 npm run dev
 ```
 
-## Construir para produccion
+## Construir para producción
 
 ```bash
 npm run build
 ```
-
-## Documentacion incluida
-
-- `base_datos/script_supabase.sql`: estructura completa de base de datos.
-- `base_datos/consultas_reportes.sql`: consultas SQL para reportes.
-- `documentacion/guia_configuracion.md`: pasos para configurar Supabase.

@@ -18,18 +18,19 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Estilos base de la pagina. */
+/* Estilos base de la página. */
 body {
   margin: 0;
   min-width: 320px;
   background: var(--color-fondo);
 }
 
+/* Los enlaces conservan el color del texto para integrarse con el diseño del sistema. */
 a {
   color: inherit;
 }
 
-/* Pantalla inicial de inicio de sesion. */
+/* Pantalla inicial de inicio de sesión. */
 .pantalla-login {
   min-height: 100vh;
   background:
@@ -40,7 +41,7 @@ a {
   padding: 24px;
 }
 
-/* Contenedor visual del formulario de login. */
+/* Contenedor visual del formulario de inicio de sesión. */
 .tarjeta-login {
   width: min(960px, 100%);
   background: var(--color-panel);
@@ -50,14 +51,14 @@ a {
   overflow: hidden;
 }
 
-/* Menu lateral usado por administrador y operador. */
+/* Menú lateral usado por administrador y operador. */
 .panel-lateral {
   min-height: 100vh;
   background: #1f3f5f;
   color: #f5f9fc;
 }
 
-/* Estado normal y activo de las opciones del menu. */
+/* Estado normal y activo de las opciones del menú. */
 .menu-lateral .nav-link {
   color: rgba(255, 255, 255, 0.78);
   border-radius: 6px;
@@ -70,13 +71,13 @@ a {
   background: rgba(255, 255, 255, 0.14);
 }
 
-/* Area principal donde se cargan las pantallas internas. */
+/* Área principal donde se cargan las pantallas internas. */
 .contenido-panel {
   min-height: 100vh;
   background: var(--color-fondo);
 }
 
-/* Barra superior con usuario y boton de salida. */
+/* Barra superior con usuario y botón de salida. */
 .barra-superior {
   background: var(--color-panel);
   border-bottom: 1px solid var(--color-borde);
@@ -90,18 +91,18 @@ a {
   box-shadow: var(--sombra-panel);
 }
 
-/* Titulos principales de cada seccion. */
+/* Títulos principales de cada sección. */
 .titulo-seccion {
   font-size: clamp(1.35rem, 2vw, 1.9rem);
   font-weight: 700;
   color: #1f2f3a;
 }
-
 .texto-suave {
+  /* Color secundario para descripciones, fechas y texto de apoyo. */
   color: var(--color-texto-suave);
 }
 
-/* Boton principal con los colores del proyecto. */
+/* Botón principal con los colores del proyecto. */
 .btn-primario {
   --bs-btn-bg: var(--color-primario);
   --bs-btn-border-color: var(--color-primario);
@@ -110,7 +111,7 @@ a {
   --bs-btn-color: #ffffff;
 }
 
-/* Ajustes pequenos para tablas y formularios. */
+/* Ajustes pequeños para tablas y formularios. */
 .badge-estado {
   min-width: 72px;
 }
@@ -119,8 +120,8 @@ a {
 .tabla-ajustada td {
   vertical-align: middle;
 }
-
 .modal-fondo {
+  /* Capa semitransparente que resalta el formulario modal abierto. */
   background: rgba(0, 0, 0, 0.45);
 }
 
@@ -129,6 +130,7 @@ a {
   color: #c0392b;
 }
 
+/* En pantallas pequeñas el menú ya no necesita ocupar toda la altura. */
 @media (max-width: 991.98px) {
   .panel-lateral {
     min-height: auto;
