@@ -21,6 +21,7 @@ La idea del sistema es tener una plataforma donde se pueda administrar la inform
 - Registro del orden de estaciones por línea.
 - Registro de distancias entre estaciones.
 - Registro de llegada y salida de buses.
+- Asignación de pilotos a buses.
 - Alertas por sobrecupo o baja ocupación.
 - Reportes generales del sistema.
 

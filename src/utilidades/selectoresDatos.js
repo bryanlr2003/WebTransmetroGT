@@ -34,6 +34,7 @@ export function obtenerMunicipalidadRegistro(tipo, registro, datos) {
   const estaciones = datos.estaciones || []
   const accesos = datos.accesos || []
   const parqueos = datos.parqueos || []
+  const buses = datos.buses || []
 
   // Estos catálogos guardan la municipalidad directamente en el registro.
   if (['lineas', 'estaciones', 'parqueos'].includes(tipo)) {
@@ -54,6 +55,12 @@ export function obtenerMunicipalidadRegistro(tipo, registro, datos) {
   // Un bus se asocia obligatoriamente a un parqueo, que define su municipalidad.
   if (tipo === 'buses') {
     return buscarPorId(parqueos, registro.parqueo_id)?.municipalidad_id
+  }
+
+  // Un piloto toma su municipalidad desde el bus que tiene asignado.
+  if (tipo === 'pilotos') {
+    const busAsignado = buses.find((bus) => Number(bus.piloto_id) === Number(registro.id))
+    return buscarPorId(parqueos, busAsignado?.parqueo_id)?.municipalidad_id
   }
 
   return null

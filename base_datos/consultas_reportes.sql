@@ -42,10 +42,12 @@ select
   b.capacidad_maxima,
   coalesce(l.nombre, 'Sin linea') as linea,
   p.nombre as parqueo,
+  coalesce(pi.nombre, 'Sin piloto') as piloto,
   b.estado
 from buses b
 left join lineas l on l.id = b.linea_id
 join parqueos p on p.id = b.parqueo_id
+left join pilotos pi on pi.id = b.piloto_id
 order by l.nombre, b.codigo;
 
 -- 4. Reporte de accesos por linea.

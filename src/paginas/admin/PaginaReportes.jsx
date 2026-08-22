@@ -179,11 +179,13 @@ export function PaginaReportes({ soloLectura = false }) {
   const reporteBuses = buses.map((bus) => {
     const linea = lineas.find((item) => Number(item.id) === Number(bus.linea_id))
     const parqueo = (datos.parqueos || []).find((item) => Number(item.id) === Number(bus.parqueo_id))
+    const piloto = (datos.pilotos || []).find((item) => Number(item.id) === Number(bus.piloto_id))
 
     return {
       ...bus,
       linea: linea?.nombre || 'Sin asignar',
       parqueo: parqueo?.nombre || 'Sin asignar',
+      piloto: piloto?.nombre || 'Sin asignar',
       // Si no tiene línea, el parqueo conserva la municipalidad correcta del bus.
       municipalidad_id: linea?.municipalidad_id ?? parqueo?.municipalidad_id,
     }
@@ -356,6 +358,7 @@ export function PaginaReportes({ soloLectura = false }) {
                 { campo: 'capacidad_maxima', titulo: 'Capacidad' },
                 { campo: 'linea', titulo: 'Línea' },
                 { campo: 'parqueo', titulo: 'Parqueo' },
+                { campo: 'piloto', titulo: 'Piloto' },
               ]}
               datos={reporteBusesFiltrado}
             />

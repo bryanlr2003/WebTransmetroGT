@@ -29,6 +29,12 @@ export function obtenerConfiguracionCatalogo(tipo, datos) {
   const obtenerLinea = (id) => (datos.lineas || []).find((linea) => Number(linea.id) === Number(id))
   const obtenerEstacion = (id) => (datos.estaciones || []).find((estacion) => Number(estacion.id) === Number(id))
   const obtenerAcceso = (id) => (datos.accesos || []).find((acceso) => Number(acceso.id) === Number(id))
+  const obtenerBusPiloto = (pilotoId) => (datos.buses || []).find((bus) => Number(bus.piloto_id) === Number(pilotoId))
+  const pilotosAsignados = new Set(
+    (datos.buses || [])
+      .map((bus) => Number(bus.piloto_id))
+      .filter(Boolean),
+  )
 
   // Cada bloque define título, tabla, campos del formulario y columnas de la tabla del catálogo.
   const configuraciones = {
@@ -315,6 +321,22 @@ export function obtenerConfiguracionCatalogo(tipo, datos) {
           },
           requerido: true,
         },
+        {
+          nombre: 'piloto_id',
+          etiqueta: 'Piloto asignado',
+          tipo: 'select',
+          requerido: true,
+          // Cada piloto activo se puede asignar a un solo bus.
+          obtenerOpciones: (valores) =>
+            opcionesDesdeLista(
+              (datos.pilotos || []).filter(
+                (piloto) =>
+                  piloto.estado === 'activo' &&
+                  (!pilotosAsignados.has(Number(piloto.id)) || Number(piloto.id) === Number(valores.piloto_id)),
+              ),
+              (item) => item.nombre,
+            ),
+        },
         { nombre: 'estado', etiqueta: 'Estado', tipo: 'select', opciones: opcionesEstado, valorInicial: 'activo', requerido: true },
       ],
       columnas: [
@@ -331,6 +353,11 @@ export function obtenerConfiguracionCatalogo(tipo, datos) {
           titulo: 'Parqueo',
           render: (registro) => obtenerNombre(datos.parqueos, registro.parqueo_id),
         },
+        {
+          campo: 'piloto_id',
+          titulo: 'Piloto',
+          render: (registro) => obtenerNombre(datos.pilotos, registro.piloto_id),
+        },
         { campo: 'estado', titulo: 'Estado', render: estadoBadge },
       ],
     },
@@ -338,6 +365,8 @@ export function obtenerConfiguracionCatalogo(tipo, datos) {
       titulo: 'Pilotos',
       tabla: 'pilotos',
       descripcion: 'Registro de datos personales, residencia, comunicación e historial educativo.',
+      // El filtro de municipalidad se obtiene desde el bus asignado al piloto.
+      permiteFiltroMunicipalidad: true,
       campos: [
         { nombre: 'nombre', etiqueta: 'Nombre', requerido: true },
         {
@@ -367,6 +396,11 @@ export function obtenerConfiguracionCatalogo(tipo, datos) {
         { campo: 'telefono', titulo: 'Teléfono' },
         { campo: 'correo', titulo: 'Correo' },
         { campo: 'municipio_residencia', titulo: 'Residencia' },
+        {
+          campo: 'bus_asignado',
+          titulo: 'Bus asignado',
+          render: (registro) => obtenerBusPiloto(registro.id)?.codigo || 'Sin asignar',
+        },
         { campo: 'estado', titulo: 'Estado', render: estadoBadge },
       ],
     },

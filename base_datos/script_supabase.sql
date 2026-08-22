@@ -119,6 +119,14 @@ create table if not exists pilotos (
   actualizado_en timestamp not null default now()
 );
 
+-- Relacion entre bus y piloto. Cada piloto puede quedar asignado a un solo bus.
+alter table if exists buses
+add column if not exists piloto_id bigint references pilotos(id) on delete set null;
+
+create unique index if not exists idx_buses_piloto_unico
+on buses(piloto_id)
+where piloto_id is not null;
+
 -- Usuarios del sistema. Solo se manejan administrador y operador.
 create table if not exists usuarios (
   id bigint generated always as identity primary key,
@@ -455,10 +463,12 @@ select
   b.capacidad_maxima,
   coalesce(l.nombre, 'Sin linea') as linea,
   p.nombre as parqueo,
+  coalesce(pi.nombre, 'Sin piloto') as piloto,
   b.estado
 from buses b
 left join lineas l on l.id = b.linea_id
-join parqueos p on p.id = b.parqueo_id;
+join parqueos p on p.id = b.parqueo_id
+left join pilotos pi on pi.id = b.piloto_id;
 
 -- ============================================================
 -- USUARIO PRINCIPAL DEL SISTEMA
