@@ -29,12 +29,9 @@ export function obtenerConfiguracionCatalogo(tipo, datos) {
   const obtenerLinea = (id) => (datos.lineas || []).find((linea) => Number(linea.id) === Number(id))
   const obtenerEstacion = (id) => (datos.estaciones || []).find((estacion) => Number(estacion.id) === Number(id))
   const obtenerAcceso = (id) => (datos.accesos || []).find((acceso) => Number(acceso.id) === Number(id))
+  const obtenerParqueo = (id) => (datos.parqueos || []).find((parqueo) => Number(parqueo.id) === Number(id))
   const obtenerBusPiloto = (pilotoId) => (datos.buses || []).find((bus) => Number(bus.piloto_id) === Number(pilotoId))
-  const pilotosAsignados = new Set(
-    (datos.buses || [])
-      .map((bus) => Number(bus.piloto_id))
-      .filter(Boolean),
-  )
+  const obtenerMunicipalidadBus = (bus) => obtenerParqueo(bus?.parqueo_id)?.municipalidad_id
 
   // Cada bloque define título, tabla, campos del formulario y columnas de la tabla del catálogo.
   const configuraciones = {
@@ -321,22 +318,6 @@ export function obtenerConfiguracionCatalogo(tipo, datos) {
           },
           requerido: true,
         },
-        {
-          nombre: 'piloto_id',
-          etiqueta: 'Piloto asignado',
-          tipo: 'select',
-          requerido: true,
-          // Cada piloto activo se puede asignar a un solo bus.
-          obtenerOpciones: (valores) =>
-            opcionesDesdeLista(
-              (datos.pilotos || []).filter(
-                (piloto) =>
-                  piloto.estado === 'activo' &&
-                  (!pilotosAsignados.has(Number(piloto.id)) || Number(piloto.id) === Number(valores.piloto_id)),
-              ),
-              (item) => item.nombre,
-            ),
-        },
         { nombre: 'estado', etiqueta: 'Estado', tipo: 'select', opciones: opcionesEstado, valorInicial: 'activo', requerido: true },
       ],
       columnas: [
@@ -364,7 +345,7 @@ export function obtenerConfiguracionCatalogo(tipo, datos) {
     pilotos: {
       titulo: 'Pilotos',
       tabla: 'pilotos',
-      descripcion: 'Registro de datos personales, residencia, comunicación e historial educativo.',
+      descripcion: 'Registro de datos personales, residencia, historial educativo y bus asignado.',
       // El filtro de municipalidad se obtiene desde el bus asignado al piloto.
       permiteFiltroMunicipalidad: true,
       campos: [
@@ -389,6 +370,38 @@ export function obtenerConfiguracionCatalogo(tipo, datos) {
         { nombre: 'direccion', etiqueta: 'Dirección', requerido: true },
         { nombre: 'municipio_residencia', etiqueta: 'Municipio de residencia', requerido: true },
         { nombre: 'historial_educativo', etiqueta: 'Historial educativo', tipo: 'textarea', columna: 'col-12', requerido: true },
+        {
+          nombre: 'municipalidad_bus_filtro',
+          etiqueta: 'Municipalidad del bus',
+          tipo: 'select',
+          opciones: opcionesMunicipalidades,
+          virtual: true,
+          // Primero se elige la municipalidad para no mezclar buses de todo el sistema.
+          obtenerValorInicial: (registro) => {
+            const busAsignado = obtenerBusPiloto(registro?.id)
+            return obtenerMunicipalidadBus(busAsignado) || ''
+          },
+        },
+        {
+          nombre: 'bus_id',
+          etiqueta: 'Bus asignado',
+          tipo: 'select',
+          dependeDe: 'municipalidad_bus_filtro',
+          mensajeDependencia: 'Seleccione primero la municipalidad...',
+          virtual: true,
+          // El piloto puede quedar sin bus, pero si se asigna solo aparecen buses libres.
+          obtenerValorInicial: (registro) => obtenerBusPiloto(registro?.id)?.id || '',
+          obtenerOpciones: (valores, registro) =>
+            opcionesDesdeLista(
+              (datos.buses || []).filter(
+                (bus) =>
+                  Number(obtenerMunicipalidadBus(bus)) === Number(valores.municipalidad_bus_filtro) &&
+                  (bus.estado === 'activo' || Number(bus.piloto_id) === Number(registro?.id)) &&
+                  (!bus.piloto_id || Number(bus.piloto_id) === Number(registro?.id)),
+              ),
+              (item) => `${item.codigo} - ${item.placa}`,
+            ),
+        },
         { nombre: 'estado', etiqueta: 'Estado', tipo: 'select', opciones: opcionesEstado, valorInicial: 'activo', requerido: true },
       ],
       columnas: [

@@ -33,12 +33,19 @@ export function ProveedorDatos({ children }) {
 
   // Funciones reutilizadas por los catálogos del administrador. Después de cada cambio se recargan los datos.
   async function crearRegistro(tabla, valores) {
-    await servicioDatos.crearRegistro(tabla, valores)
+    const resultado = await servicioDatos.crearRegistro(tabla, valores)
     await recargarDatos()
+    return resultado
   }
 
   async function actualizarRegistro(tabla, id, valores) {
-    await servicioDatos.actualizarRegistro(tabla, id, valores)
+    const resultado = await servicioDatos.actualizarRegistro(tabla, id, valores)
+    await recargarDatos()
+    return resultado
+  }
+
+  async function asignarBusAPiloto(pilotoId, busId) {
+    await servicioDatos.asignarBusAPiloto(pilotoId, busId)
     await recargarDatos()
   }
 
@@ -80,6 +87,7 @@ export function ProveedorDatos({ children }) {
     recargarDatos,
     crearRegistro,
     actualizarRegistro,
+    asignarBusAPiloto,
     eliminarRegistro,
     crearUsuario,
     actualizarUsuario,

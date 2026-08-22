@@ -17,9 +17,9 @@ function obtenerValorInicial(campo, registro) {
 }
 
 // Devuelve las opciones del select; algunas dependen de otros campos del formulario.
-function obtenerOpcionesCampo(campo, valores) {
+function obtenerOpcionesCampo(campo, valores, registro) {
   if (campo.obtenerOpciones) {
-    return campo.obtenerOpciones(valores)
+    return campo.obtenerOpciones(valores, registro)
   }
   return campo.opciones || []
 }
@@ -170,7 +170,7 @@ export function FormularioModal({
                           : 'Seleccione...'}
                       </option>
                       {/* Las opciones pueden ser fijas o depender de otro campo elegido. */}
-                      {obtenerOpcionesCampo(campo, valores).map((opcion) => (
+                      {obtenerOpcionesCampo(campo, valores, registro).map((opcion) => (
                         <option key={opcion.valor} value={opcion.valor}>
                           {opcion.texto}
                         </option>

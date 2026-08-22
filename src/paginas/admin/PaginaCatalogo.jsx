@@ -64,6 +64,7 @@ export function PaginaCatalogo({ tipo }) {
     errorDatos,
     crearRegistro,
     actualizarRegistro,
+    asignarBusAPiloto,
     eliminarRegistro,
     crearUsuario,
     actualizarUsuario,
@@ -119,15 +120,21 @@ export function PaginaCatalogo({ tipo }) {
     try {
       const esOperador = tipo === 'operadores'
       const datosFormulario = normalizarValores(configuracion.campos, valores, esOperador)
+      const busAsignadoId = valores.bus_id ? Number(valores.bus_id) : null
+      let registroGuardado = null
 
       if (esOperador && registroEditando) {
-        await actualizarUsuario(registroEditando.id, datosFormulario)
+        registroGuardado = await actualizarUsuario(registroEditando.id, datosFormulario)
       } else if (esOperador) {
-        await crearUsuario(datosFormulario)
+        registroGuardado = await crearUsuario(datosFormulario)
       } else if (registroEditando) {
-        await actualizarRegistro(configuracion.tabla, registroEditando.id, datosFormulario)
+        registroGuardado = await actualizarRegistro(configuracion.tabla, registroEditando.id, datosFormulario)
       } else {
-        await crearRegistro(configuracion.tabla, datosFormulario)
+        registroGuardado = await crearRegistro(configuracion.tabla, datosFormulario)
+      }
+
+      if (tipo === 'pilotos') {
+        await asignarBusAPiloto(registroGuardado.id, busAsignadoId)
       }
 
       setMensaje('Registro guardado correctamente.')

@@ -12,8 +12,8 @@ La idea es tenerlos ordenados por si toca levantar el proyecto desde cero o apli
 
 2. `script_asignar_pilotos_buses.sql`
 
-   Este script se usa cuando la base ya estaba creada antes de agregar la asignacion de pilotos a buses.
-   Agrega el campo `piloto_id` en buses, evita que un piloto quede en mas de un bus y actualiza la vista de buses asignados.
+   Este script deja lista la asignacion de pilotos a buses cuando la base ya existe.
+   Agrega el campo `piloto_id` en buses, permite que un bus quede sin piloto y evita que un piloto quede en mas de un bus.
 
 3. `script_actualizar_indicador_capacidad.sql`
 
@@ -25,5 +25,5 @@ La idea es tenerlos ordenados por si toca levantar el proyecto desde cero o apli
 
 ## Nota
 
-Si se ejecuta `script_supabase.sql` en una base nueva, ya queda incluida la parte de pilotos asignados a buses.
+Si se ejecuta `script_supabase.sql` en una base nueva, ya queda incluida la asignacion de pilotos a buses.
 El script `script_asignar_pilotos_buses.sql` sirve mas que todo para actualizar una base que ya estaba creada.

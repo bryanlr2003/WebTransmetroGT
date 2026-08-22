@@ -1,8 +1,8 @@
 -- ============================================================
 -- Asignacion de pilotos a buses
 -- ============================================================
--- Este script agrega la relacion entre buses y pilotos en una base ya creada.
--- Cada bus puede tener un piloto asignado y cada piloto solo puede estar en un bus.
+-- Este script deja lista la relacion para asignar buses desde el registro de pilotos.
+-- Un bus puede quedar sin piloto, pero un piloto asignado solo puede estar en un bus.
 -- Se ejecuta una vez en Supabase si el proyecto ya tenia la base montada.
 
 alter table if exists buses

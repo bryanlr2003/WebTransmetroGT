@@ -119,7 +119,7 @@ create table if not exists pilotos (
   actualizado_en timestamp not null default now()
 );
 
--- Relacion entre bus y piloto. Cada piloto puede quedar asignado a un solo bus.
+-- Relacion entre bus y piloto. La asignacion se maneja desde el registro de pilotos.
 alter table if exists buses
 add column if not exists piloto_id bigint references pilotos(id) on delete set null;
 

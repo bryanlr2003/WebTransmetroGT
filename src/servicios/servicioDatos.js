@@ -91,6 +91,45 @@ export const servicioDatos = {
     )
   },
 
+  // Asigna un bus al piloto elegido. Si se deja vacio, el piloto queda sin bus.
+  async asignarBusAPiloto(pilotoId, busId) {
+    validarConexionSupabase()
+
+    if (busId) {
+      const busSeleccionado = await ejecutarConsulta(
+        clienteSupabase
+          .from('buses')
+          .select('id,piloto_id')
+          .eq('id', busId)
+          .single(),
+      )
+
+      if (busSeleccionado.piloto_id && Number(busSeleccionado.piloto_id) !== Number(pilotoId)) {
+        throw new Error('El bus seleccionado ya tiene piloto asignado.')
+      }
+    }
+
+    await ejecutarConsulta(
+      clienteSupabase
+        .from('buses')
+        .update({ piloto_id: null })
+        .eq('piloto_id', pilotoId),
+    )
+
+    if (!busId) {
+      return true
+    }
+
+    await ejecutarConsulta(
+      clienteSupabase
+        .from('buses')
+        .update({ piloto_id: pilotoId })
+        .eq('id', busId),
+    )
+
+    return true
+  },
+
   // Elimina un registro del catálogo indicado usando su id y confirma la operación con true.
   async eliminarRegistro(tabla, id) {
     validarConexionSupabase()
