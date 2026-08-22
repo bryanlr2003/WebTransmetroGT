@@ -1,45 +1,43 @@
 # WebTransmetroGT
 
-Sistema web administrativo para el control básico del Transmetro GT.
+Proyecto web para llevar el control básico del Transmetro GT.
 
-El proyecto fue desarrollado con React, Bootstrap y Supabase, siguiendo el alcance solicitado por la Docente Evaluadora: administrar líneas, estaciones, accesos, guardias, buses, parqueos, pilotos, operadores, recorridos, alertas y reportes.
+La idea del sistema es tener una plataforma donde se pueda administrar la información principal del servicio, como líneas, estaciones, buses, pilotos, operadores y recorridos. También permite registrar llegadas y salidas de buses desde una estación, y generar alertas cuando un bus tiene sobrecupo o baja ocupación.
 
-## Tecnologías
+## Tecnologías usadas
 
 - React + Vite
 - Bootstrap
 - Bootstrap Icons
 - React Router DOM
 - Supabase con PostgreSQL
-- Render para despliegue
+- Render para el despliegue
 
-## Funciones principales
+## Qué incluye el proyecto
 
-- Inicio de sesión por rol.
-- Panel de administrador.
-- Catálogos de municipalidades, líneas, estaciones, accesos, guardias, parqueos, buses, pilotos y operadores.
-- Definición del orden de estaciones por línea.
-- Registro de distancia entre estaciones.
-- Registro de llegada y salida de buses por operador.
-- Generación de alertas por sobrecupo o baja ocupación.
-- Reportes de líneas, estaciones, buses asignados, recorridos y alertas.
+- Inicio de sesión para administrador y operador.
+- Panel principal para cada rol.
+- Catálogos para administrar municipalidades, líneas, estaciones, accesos, guardias, parqueos, buses, pilotos y operadores.
+- Registro del orden de estaciones por línea.
+- Registro de distancias entre estaciones.
+- Registro de llegada y salida de buses.
+- Alertas por sobrecupo o baja ocupación.
+- Reportes generales del sistema.
 
 ## Roles
 
-- Administrador: administra la información principal del sistema.
-- Operador: registra llegadas y salidas desde su estación asignada.
+- Administrador: puede administrar los catálogos, rutas, operadores y reportes.
+- Operador: registra la llegada y salida de buses desde la estación que tiene asignada.
 
-## Configuración de Supabase
+## Base de datos
 
-1. Crear un proyecto en Supabase.
-2. Abrir el editor SQL.
-3. Pegar y ejecutar el archivo:
+La base de datos se trabaja con Supabase. Para crear las tablas y funciones necesarias se debe ejecutar el script:
 
 ```text
 base_datos/script_supabase.sql
 ```
 
-4. Copiar las credenciales del proyecto y colocarlas en `.env`:
+Después se colocan las credenciales del proyecto en un archivo `.env`:
 
 ```env
 VITE_SUPABASE_URL=https://su-proyecto.supabase.co
@@ -55,14 +53,14 @@ Correo: admin@gmail.com
 Contraseña: Admin123*
 ```
 
-## Ejecutar localmente
+## Cómo ejecutar el proyecto
 
 ```bash
 npm install
 npm run dev
 ```
 
-## Construir para producción
+## Compilar el proyecto
 
 ```bash
 npm run build
