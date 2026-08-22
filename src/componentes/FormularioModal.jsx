@@ -56,6 +56,26 @@ function aplicarFormato(campo, valor) {
   return valor
 }
 
+// Busca todos los campos que dependen de otro, incluso cuando la relacion viene en cadena.
+// Esto mantiene consistente el formulario cuando un select depende de otro select.
+function obtenerCamposDependientes(campos, nombreCampo) {
+  const pendientes = [nombreCampo]
+  const dependientes = []
+
+  while (pendientes.length > 0) {
+    const actual = pendientes.shift()
+
+    campos.forEach((campo) => {
+      if (campo.dependeDe === actual && !dependientes.includes(campo.nombre)) {
+        dependientes.push(campo.nombre)
+        pendientes.push(campo.nombre)
+      }
+    })
+  }
+
+  return dependientes
+}
+
 // Formulario reutilizable para crear o editar registros desde una ventana modal.
 // Recibe la visibilidad, título, campos, registro, textos y funciones de guardar o cerrar.
 export function FormularioModal({
@@ -91,10 +111,8 @@ export function FormularioModal({
     setValores((actuales) => {
       const nuevosValores = { ...actuales, [campoActual.nombre]: valorFormateado }
 
-      campos.forEach((campo) => {
-        if (campo.dependeDe === campoActual.nombre) {
-          nuevosValores[campo.nombre] = ''
-        }
+      obtenerCamposDependientes(campos, campoActual.nombre).forEach((nombreCampo) => {
+        nuevosValores[nombreCampo] = ''
       })
 
       return nuevosValores

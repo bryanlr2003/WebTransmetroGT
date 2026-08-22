@@ -24,7 +24,6 @@ export function obtenerConfiguracionCatalogo(tipo, datos) {
   // Opciones para llenar selects desde la información que ya viene de Supabase.
   const opcionesMunicipalidades = opcionesDesdeLista(datos.municipalidades, (item) => item.nombre)
   const opcionesLineas = opcionesDesdeLista(datos.lineas, (item) => `${item.codigo} - ${item.nombre}`)
-  const opcionesEstaciones = opcionesDesdeLista(datos.estaciones, (item) => item.nombre)
 
   // Funciones de apoyo para encontrar registros relacionados cuando se editan formularios.
   const obtenerLinea = (id) => (datos.lineas || []).find((linea) => Number(linea.id) === Number(id))
@@ -168,13 +167,36 @@ export function obtenerConfiguracionCatalogo(tipo, datos) {
           inputMode: 'numeric',
         },
         {
+          nombre: 'municipalidad_filtro',
+          etiqueta: 'Municipalidad',
+          tipo: 'select',
+          opciones: opcionesMunicipalidades,
+          requerido: true,
+          virtual: true,
+          // Campo virtual: primero se elige la municipalidad para mostrar sus estaciones.
+          obtenerValorInicial: (registro) => {
+            const acceso = obtenerAcceso(registro?.acceso_id)
+            const estacion = obtenerEstacion(acceso?.estacion_id)
+            return estacion?.municipalidad_id || ''
+          },
+        },
+        {
           nombre: 'estacion_filtro',
           etiqueta: 'Estación',
           tipo: 'select',
-          opciones: opcionesEstaciones,
+          dependeDe: 'municipalidad_filtro',
+          mensajeDependencia: 'Seleccione primero la municipalidad...',
           requerido: true,
           virtual: true,
-          // Campo virtual: sirve para filtrar accesos según la estación.
+          // Con la municipalidad elegida, se listan solo sus estaciones.
+          obtenerOpciones: (valores) =>
+            opcionesDesdeLista(
+              (datos.estaciones || []).filter(
+                (estacion) => Number(estacion.municipalidad_id) === Number(valores.municipalidad_filtro),
+              ),
+              (item) => item.nombre,
+            ),
+          // Campo virtual: sirve para cargar la estación al editar un guardia.
           obtenerValorInicial: (registro) => {
             const acceso = obtenerAcceso(registro?.acceso_id)
             return acceso?.estacion_id || ''
